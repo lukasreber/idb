@@ -15,4 +15,3 @@
 - Wieso sind mehrere Einträge sichtbar bei dns-sd -G v4 raspberrypi.local?
 
 
-Test von Rasperry
