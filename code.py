@@ -1,6 +1,6 @@
 import time
 from grove.gpio import GPIO
-import grove.grove_temperature_humidity_sensor as dht
+import seeed_dht as dht
 
 
 def usleep(x): return time.sleep(x / 1000000.0)
