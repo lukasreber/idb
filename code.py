@@ -1,9 +1,14 @@
 import time
 from grove.gpio import GPIO
 import seeed_dht as dht
+import requests
 
 
 def usleep(x): return time.sleep(x / 1000000.0)
+
+
+url = 'https://api.thingspeak.com/update'
+api_key = 'S5QBAVI8O1SZI315'
 
 
 ULTRASONIC_PIN = 5
@@ -82,6 +87,17 @@ def main():
         # we are only interested in the humidity
         if not humi is None:
             h = int(round(humi))
+            t = int(round(temp))
+            params = {
+                'api_key': api_key,
+                'field1': t,
+                'field2': h
+            }
+            try:
+                r = requests.get(url, params=params)
+                r.raise_for_status()
+            except:
+                print('API Request failed')
         else:
             h = 1000000
 
