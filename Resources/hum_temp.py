@@ -1,6 +1,6 @@
 import time
 import math
-import grove.grove_temperature_humidity_sensor as dht
+import seeed_dht as dht
 
 DHT_PIN = 16  # rasperry pi Pin16, Grove D16
 

@@ -1,6 +1,8 @@
 import time
+import sys
 from grove.gpio import GPIO
-import seeed_dht as dht
+from grove.grove_led import GroveLed
+import grove.grove_temperature_humidity_sensor as dht
 import requests
 
 
@@ -13,8 +15,7 @@ api_key = 'S5QBAVI8O1SZI315'
 
 ULTRASONIC_PIN = 5
 DHT_PIN = 16
-led = GPIO(12, GPIO.OUT)
-
+LED_PIN = 12
 
 _TIMEOUT1 = 1000
 _TIMEOUT2 = 10000
@@ -72,18 +73,23 @@ class GroveUltrasonicRanger(object):
 Grove = GroveUltrasonicRanger
 
 
-def main():
-
+def initial():
+    # setup led
+    led = GroveLed(LED_PIN)
+    # setup dht
+    my_dht = dht.DHT("11", DHT_PIN)
     # initialize distance and temperatur/humidity sensor
     sonar = GroveUltrasonicRanger(ULTRASONIC_PIN)
-    temp_hum_sensor = dht.DHT("11", DHT_PIN)
 
-    print('Detecting distance...')
+    return my_dht, led, sonar
+
+
+def main(my_dht, led, sonar):
     while True:
         # read value from distance sensor
         dist = sonar.get_distance()
         # read value form temperatur/humidity sensor
-        humi, temp = temp_hum_sensor.read()
+        humi, temp = my_dht.read()
         # we are only interested in the humidity
         if not humi is None:
             h = int(round(humi))
@@ -102,12 +108,16 @@ def main():
             h = 1000000
 
         print(f'distance: {dist}, humidity: {h}')
-        if dist < 20 and humi > 80:
+        if dist < 20 and humi > 60:
             led.write(True)
         else:
             led.write(False)
-        time.sleep(1)
+        time.sleep(2)
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        my_dht, led, sonar = initial()
+        main(my_dht, led, sonar)
+    except KeyboardInterrupt:
+        sys.exit(0)

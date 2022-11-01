@@ -28,3 +28,9 @@ All code is inside code.py
 - Connect Temp & Humidity Sensor on Port D16
 - Connect Ultrasonic Distance on Port D5
 - Connect LED on Port PWM
+
+### ThingSpeak Account
+
+Test HTTP POST
+
+curl -v https://api.thingspeak.com/update -d "api_key=MY_WRITE_API_KEY&field1=5&field2=10&field3=20"
