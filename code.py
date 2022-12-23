@@ -9,13 +9,18 @@ import requests
 def usleep(x): return time.sleep(x / 1000000.0)
 
 
+# ThingSpeak API
 url = 'https://api.thingspeak.com/update'
 api_key = 'S5QBAVI8O1SZI315'
 
-
+# GrovePi pins
 ULTRASONIC_PIN = 5
 DHT_PIN = 16
 LED_PIN = 12
+
+# Thresholds
+t_humidity = 60
+t_distance = 20
 
 _TIMEOUT1 = 1000
 _TIMEOUT2 = 10000
@@ -90,7 +95,7 @@ def main(my_dht, led, sonar):
         dist = sonar.get_distance()
         # read value form temperatur/humidity sensor
         humi, temp = my_dht.read()
-        # we are only interested in the humidity
+        # submit data to ThingSpeak
         if not humi is None:
             h = int(round(humi))
             t = int(round(temp))
@@ -108,7 +113,8 @@ def main(my_dht, led, sonar):
             h = 1000000
 
         print(f'distance: {dist}, humidity: {h}')
-        if dist < 20 and humi > 60:
+        # turn on/off led depending on values
+        if dist < t_distance and humi > t_humidity:
             led.write(True)
         else:
             led.write(False)

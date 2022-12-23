@@ -34,3 +34,34 @@ All code is inside code.py
 Test HTTP POST
 
 curl -v https://api.thingspeak.com/update -d "api_key=MY_WRITE_API_KEY&field1=5&field2=10&field3=20"
+
+# Start Code at Startup
+
+1. Create a shell file
+
+   sudo nano /home/repo/idb/launcher.sh
+
+2. Add the following code
+
+   #!/bin/sh
+
+   # launcher.sh
+
+   # navigate to home directory, then to this directory, then execute python script, then back home
+
+   cd /
+   cd home/repo/idb
+   sudo python3 code.py
+   cd /
+
+3. Make the shell file executable
+
+   sudo chmod +x /home/repo/idb/launcher.sh
+
+4. Add the shell file to the crontab
+
+   sudo crontab -e
+
+5. Add the following line to the crontab
+
+   @reboot sh /home/repo/idb/launcher.sh >/home/repo/idb/cronlog 2>&1
